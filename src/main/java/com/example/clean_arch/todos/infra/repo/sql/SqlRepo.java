@@ -8,9 +8,14 @@ import com.example.clean_arch.todos.infra.repo.sql.repo.TaskRepo;
 import com.example.clean_arch.todos.infra.repo.sql.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,9 +26,10 @@ public class SqlRepo implements ITaskRepo {
 
     @Autowired
     private TaskRepo taskRepo;
-
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private JdbcTemplate jdbc;
 
     @Override
     public void createTaskForUser(String userName, Task task) {
@@ -45,7 +51,26 @@ public class SqlRepo implements ITaskRepo {
 
     @Override
     public List<Task> getTasksOfUser(String userName) {
-        return null;
+        return jdbc.query(
+            "select id, desc, status from tasks where user_id = (select user_id from users where username = ?)",
+            new Object[] {userName},
+            new int[] {Types.VARCHAR},
+            new RowMapper<Task>() {
+                @Override
+                public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Task task = new Task(
+                        rs.getString("id"),
+                        rs.getString("desc")
+                    );
+
+                    int status = rs.getInt("status");
+                    if (status == 0) {
+//                            ...
+                    }
+                    return task;
+                }
+            }
+        );
     }
 
     @Override
