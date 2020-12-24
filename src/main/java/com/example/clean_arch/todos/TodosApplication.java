@@ -30,7 +30,7 @@ public class TodosApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         LOGGER.info("====== Main Program ======");
 
-        TaskUC uc = appContext.getBean(TaskUC.class);
+        /*TaskUC uc = appContext.getBean(TaskUC.class);
         String user = "joe";
 
         Task newTask = uc.createTask(user, "My first task");
@@ -40,6 +40,6 @@ public class TodosApplication implements CommandLineRunner {
         LOGGER.info("Current tasks for " + user);
         lst.forEach((item) -> {
             LOGGER.info("\t " + item.toString());
-        });
+        });*/
     }
 }

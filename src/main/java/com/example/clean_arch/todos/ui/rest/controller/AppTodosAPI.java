@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class AppTodosAPI {
     private TaskUC taskUC;
 
     @PostMapping("/todos")
-    public ResponseEntity addNewTodoTask(@RequestBody TaskReqModel reqModel, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity addNewTodoTask(@RequestBody TaskReqModel reqModel) {
         LOGGER.info("reqModel: " + reqModel.toString());
         Task newTask = taskUC.createTask(reqModel.getUserName(), reqModel.getTaskDesc());
         LOGGER.info("newTask: " + newTask.toString());
@@ -43,8 +45,12 @@ public class AppTodosAPI {
 //        return ResponseEntity.ok().body(respModel);
 
         // return 201 with url?
-        UriComponents detailURI = uriBuilder.path("/todos/{id}").buildAndExpand(newTask.getId());
-        return ResponseEntity.created(detailURI.toUri()).body(respModel);
+        URI detailURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/todos/{id}")
+                .buildAndExpand(newTask.getId())
+                .toUri();
+        return ResponseEntity.created(detailURI).body(respModel);
     }
 
     @GetMapping("/todos")
