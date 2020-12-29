@@ -42,7 +42,7 @@ public class TodosApiTest {
     }
 
     @Test
-    void getTasksOfUser() throws Exception {
+    void successToGetTasksOfUser() throws Exception {
         String username = "joe";
         when(taskUC.getTasksByUsername(username)).thenReturn(taskLst);
 

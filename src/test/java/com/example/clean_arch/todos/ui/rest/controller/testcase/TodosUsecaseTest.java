@@ -27,7 +27,7 @@ public class TodosUsecaseTest {
     private TaskUC taskUC;
 
     @Test
-    void getTasksOfUser() {
+    void successToGetTasksOfUser() {
         String user = "johndoe";
 
         Task newTask = new Task("task_id", "My first task");
