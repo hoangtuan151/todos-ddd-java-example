@@ -47,7 +47,7 @@ public class AppTodosAPI {
         // return 201 with url?
         URI detailURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/todos/{id}")
+                .path("/{id}")
                 .buildAndExpand(newTask.getId())
                 .toUri();
         return ResponseEntity.created(detailURI).body(respModel);
