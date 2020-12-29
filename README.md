@@ -1,5 +1,6 @@
 # About
 
+A clean-architecture approach to implement Todos API with Spring Boot 
 
 # Ref:
 
