@@ -1,10 +1,10 @@
-package com.example.clean_arch.todos.biz_core.domain;
+package com.example.clean_arch.todos.biz_core.domain.testcase;
 
-import com.example.clean_arch.todos.utils.TaskAssert;
-import org.junit.jupiter.api.Assertions;
+import com.example.clean_arch.todos.biz_core.domain.Task;
+import com.example.clean_arch.todos.biz_core.domain.utils.TaskAssert;
 import org.junit.jupiter.api.Test;
 
-public class TaskTests {
+public class TaskTest {
 
     @Test
     void creationTest() {

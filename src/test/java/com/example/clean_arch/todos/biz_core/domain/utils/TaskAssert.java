@@ -1,4 +1,4 @@
-package com.example.clean_arch.todos.utils;
+package com.example.clean_arch.todos.biz_core.domain.utils;
 
 import com.example.clean_arch.todos.biz_core.domain.Task;
 import org.assertj.core.api.AbstractAssert;
@@ -23,6 +23,12 @@ public class TaskAssert extends AbstractAssert<TaskAssert, Task> {
     public TaskAssert isNewTask() {
         isNotNull();
         Assertions.assertThat(actual.isNew()).isTrue();
+        return this;
+    }
+
+    public TaskAssert hasDescription(String desc) {
+        isNotNull();
+        Assertions.assertThat(actual.getDesc()).isEqualTo(desc);
         return this;
     }
 }
