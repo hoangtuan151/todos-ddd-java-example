@@ -26,6 +26,13 @@ public class TodosUsecaseTest {
     @Autowired
     private TaskUC taskUC;
 
+    private String defaultUser;
+
+    @BeforeEach
+    void setUp() {
+        defaultUser = "joe";
+    }
+
     @Test
     void successToGetTasksOfUser() {
         String user = "johndoe";
@@ -39,5 +46,14 @@ public class TodosUsecaseTest {
                 .hasID(newTask.getId())
                 .hasDescription(newTask.getDesc());
     }
-    
+
+    @Test
+    void successCreateTaskForUser() {
+        Task aTask = new Task("id-001", "Task 001");
+        Task savedTask = taskUC.createTask(defaultUser, aTask.getDesc());
+
+        Task expectedTask = taskRepo.getTaskById(savedTask.getId());
+        TaskAssert.makeSureTheTask(expectedTask)
+                .hasDescription(aTask.getDesc());
+    }
 }

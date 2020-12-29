@@ -2,7 +2,7 @@
 
 A clean-architecture approach to implement Todos API with Spring Boot 
 
-# Ref:
+# Ref
 
 - https://javadeveloperzone.com/spring/how-to-get-loaded-beans-in-spring/
 - https://www.baeldung.com/spring-boot-json
@@ -12,3 +12,8 @@ A clean-architecture approach to implement Todos API with Spring Boot
 - https://dzone.com/articles/what-is-the-difference-between-hibernate-and-sprin-1
 - https://www.baeldung.com/hibernate-identifiers
 - https://mkyong.com/spring/spring-jdbctemplate-querying-examples/
+
+# Check-list
+
+- [?] Validate request body
+- [?] Response projection
