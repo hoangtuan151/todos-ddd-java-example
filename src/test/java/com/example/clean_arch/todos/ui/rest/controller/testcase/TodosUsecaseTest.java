@@ -7,6 +7,7 @@ import com.example.clean_arch.todos.biz_core.usecase.TaskUC;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -56,4 +57,21 @@ public class TodosUsecaseTest {
         TaskAssert.makeSureTheTask(expectedTask)
                 .hasDescription(aTask.getDesc());
     }
+
+    /*@Test
+    void whenValidId_thenTaskShouldBeFound() {
+        // Arrange
+        Task aTask = new Task("001", "Task 001");
+        when(
+            mockTaskRepo.getTaskById(aTask.getId())
+        ).thenReturn(
+            aTask
+        );
+
+        // Act
+        Task found = taskUC.getTaskById(aTask.getId());
+
+        // Assert
+        Assertions.assertEquals(aTask.getId(), found.getId());
+    }*/
 }

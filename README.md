@@ -17,3 +17,4 @@ A clean-architecture approach to implement Todos API with Spring Boot
 
 - [?] Validate request body
 - [?] Response projection
+- [?] Mock void function
