@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,16 @@ public class AppTodosAPI {
     private TaskUC taskUC;
 
     @PostMapping("/todos")
-    public ResponseEntity addNewTodoTask(@RequestBody TaskReqModel reqModel) {
+    public ResponseEntity addNewTodoTask(@Valid @RequestBody TaskReqModel reqModel, Errors errs) {
+        if (errs.hasErrors()) {
+            LOGGER.error("Request errors: " + errs.getErrorCount());
+            for (ObjectError err : errs.getAllErrors()) {
+                LOGGER.error("\t - err: " + err.getDefaultMessage());
+            }
+
+            return ResponseEntity.badRequest().build();
+        }
+
         LOGGER.info("reqModel: " + reqModel.toString());
         Task newTask = taskUC.createTask(reqModel.getUserName(), reqModel.getTaskDesc());
         LOGGER.info("newTask: " + newTask.toString());
