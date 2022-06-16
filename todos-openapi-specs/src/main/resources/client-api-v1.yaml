@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: TODOS Client API Spec
   description: Specs for API
-  version: 1.2.3
+  version: 1.0.0
 
 servers:
   - description: local test
@@ -25,9 +25,9 @@ paths:
 
     post:
       tags:
-        - app todos
-      summary: create new post
-      operationId: createPost
+        - app_todos
+      summary: create new todo
+      operationId: addNewTodoTask
       requestBody:
         required: true
         content:
@@ -58,6 +58,50 @@ paths:
                       description: my first task
                       status: NEW
 
+    get:
+      tags:
+        - app_todos
+      summary: get list todos
+      operationId: getListTask
+      parameters:
+        - name: user
+          description: username of the tasks' owner
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskRespModel'
+
+  /client-api/v1/todos/{todoId}:
+    summary: todo operations
+
+    get:
+      tags:
+        - app_todos
+      summary: get todo by id
+      operationId: getTodoById
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRespModel'
+
 components:
 
   schemas:
@@ -70,7 +114,7 @@ components:
       properties:
         userName:
           type: string
-        taskDesc:
+        taskDesc
           type: string
 
     TaskRespModel:

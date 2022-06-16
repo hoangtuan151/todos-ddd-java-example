@@ -2,44 +2,35 @@ package com.example.clean_arch.todos.ui.rest.controller;
 
 import com.example.clean_arch.todos.biz_core.domain.Task;
 import com.example.clean_arch.todos.biz_core.usecase.TaskUC;
-import com.example.clean_arch.todos.ui.rest.model.TaskReqModel;
-import com.example.clean_arch.todos.ui.rest.model.TaskRespModel;
+import com.example.clean_arch.todos.ui.rest.api.v1.AppTodosApi;
+import com.example.clean_arch.todos.ui.rest.api.v1.model.TaskReqModel;
+import com.example.clean_arch.todos.ui.rest.api.v1.model.TaskRespDetailModel;
+import com.example.clean_arch.todos.ui.rest.api.v1.model.TaskRespModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/app")
-public class AppTodosAPI {
+public class TodosController implements AppTodosApi {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AppTodosAPI.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(TodosController.class);
 
     @Autowired
     private TaskUC taskUC;
 
-    @PostMapping("/todos")
-    public ResponseEntity addNewTodoTask(@Valid @RequestBody TaskReqModel reqModel, Errors errs) {
-        if (errs.hasErrors()) {
-            LOGGER.error("Request errors: " + errs.getErrorCount());
-            for (ObjectError err : errs.getAllErrors()) {
-                LOGGER.error("\t - err: " + err.getDefaultMessage());
-            }
-
-            return ResponseEntity.badRequest().build();
-        }
-
+    @Override
+    public ResponseEntity<TaskRespModel> addNewTodoTask(@Valid @NotNull TaskReqModel reqModel) {
         LOGGER.info("reqModel: " + reqModel.toString());
         Task newTask = taskUC.createTask(reqModel.getUserName(), reqModel.getTaskDesc());
         LOGGER.info("newTask: " + newTask.toString());
@@ -48,7 +39,11 @@ public class AppTodosAPI {
         respModel.setId(newTask.getId());
 //        respModel.setDescription(newTask.getDesc());
 //        respModel.setStatus(newTask.getState());
-        respModel.setDetail(respModel.new Detail(newTask.getDesc(), newTask.getState()));
+        respModel.setDetail(
+            new TaskRespDetailModel()
+                .description(newTask.getDesc())
+                .status(newTask.getState()))
+        ;
 
 //        return ResponseEntity.ok().body(respModel);
 
@@ -61,8 +56,8 @@ public class AppTodosAPI {
         return ResponseEntity.created(detailURI).body(respModel);
     }
 
-    @GetMapping("/todos")
-    public ResponseEntity<List<TaskRespModel>> getListTask(@RequestParam("user") String userName) {
+    @Override
+    public ResponseEntity<List<TaskRespModel>> getListTask(@Valid @NotNull String userName) {
         try {
             LOGGER.info("getListTask for user: " + userName);
             List<Task> taskList = taskUC.getTasksByUsername(userName);
@@ -82,9 +77,15 @@ public class AppTodosAPI {
 
             if (taskList != null) {
                 return ResponseEntity.ok().body(
-                        taskList.stream().map(
-                            item -> new TaskRespModel(item)
-                        ).collect(Collectors.toList())
+                    taskList.stream().map(
+                        item -> new TaskRespModel()
+                                .id(item.getId())
+                                .detail(
+                                    new TaskRespDetailModel()
+                                        .description(item.getDesc())
+                                        .status(item.getState())
+                                )
+                    ).collect(Collectors.toList())
                 );
             } else {
                 return ResponseEntity.ok().body(new ArrayList<>());
@@ -95,14 +96,22 @@ public class AppTodosAPI {
         }
     }
 
-    @GetMapping("/todos/{id}")
-    public ResponseEntity getTaskById(@PathVariable("id") String taskID) {
-        LOGGER.info("getTaskById() - id: " + taskID);
-        Task task = taskUC.getTaskById(taskID);
+    @Override
+    public ResponseEntity<TaskRespModel> getTodoById(String todoId) {
+        LOGGER.info("getTaskById() - id: " + todoId);
+        Task task = taskUC.getTaskById(todoId);
         if (task == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok().body(new TaskRespModel(task));
+            return ResponseEntity.ok().body(
+                new TaskRespModel()
+                    .id(task.getId())
+                    .detail(
+                        new TaskRespDetailModel()
+                            .description(task.getDesc())
+                            .status(task.getState())
+                    )
+            );
         }
     }
 }

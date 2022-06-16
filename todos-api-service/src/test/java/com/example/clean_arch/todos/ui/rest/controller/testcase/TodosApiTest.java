@@ -2,7 +2,7 @@ package com.example.clean_arch.todos.ui.rest.controller.testcase;
 
 import com.example.clean_arch.todos.biz_core.domain.Task;
 import com.example.clean_arch.todos.biz_core.usecase.TaskUC;
-import com.example.clean_arch.todos.ui.rest.model.TaskReqModel;
+import com.example.clean_arch.todos.ui.rest.api.v1.model.TaskReqModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
