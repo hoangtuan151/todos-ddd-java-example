@@ -114,7 +114,7 @@ components:
       properties:
         userName:
           type: string
-        taskDesc
+        taskDesc:
           type: string
 
     TaskRespModel:
