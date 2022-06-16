@@ -1,0 +1,137 @@
+openapi: 3.0.3
+
+info:
+  title: TODOS Client API Spec
+  description: Specs for API
+  version: 1.0.0
+
+servers:
+  - description: local test
+    url: http://localhost:{port}/{basePath}
+    variables:
+      port:
+        enum:
+          - '8080'
+          - '443'
+        default: '8080'
+      basePath:
+        default: api/app
+        description: base path of rest controller
+
+paths:
+
+  /client-api/v1/todos:
+    summary: todos operations
+
+    post:
+      tags:
+        - app_todos
+      summary: create new todo
+      operationId: addNewTodoTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskReqModel'
+            example:
+              userName: joe_cole
+              taskDesc: my first task
+      responses:
+        201:
+          description: created new post successfully
+          headers:
+            Location:
+              description: URI of created post item
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRespModel'
+              examples:
+                success:
+                  description: success response
+                  value:
+                    id: 13221-321-3-123-123
+                    detail:
+                      description: my first task
+                      status: NEW
+
+    get:
+      tags:
+        - app_todos
+      summary: get list todos
+      operationId: getListTask
+      parameters:
+        - name: user
+          description: username of the tasks' owner
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskRespModel'
+
+  /client-api/v1/todos/{todoId}:
+    summary: todo operations
+
+    get:
+      tags:
+        - app_todos
+      summary: get todo by id
+      operationId: getTodoById
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRespModel'
+
+components:
+
+  schemas:
+
+    TaskReqModel:
+      type: object
+      required:
+        - userName
+        - taskDesc
+      properties:
+        userName:
+          type: string
+        taskDesc
+          type: string
+
+    TaskRespModel:
+      type: object
+      required:
+        - id
+        - detail
+      properties:
+        id:
+          type: string
+        detail:
+          $ref: '#/components/schemas/TaskRespDetailModel'
+
+    TaskRespDetailModel:
+      type: object
+      properties:
+        description:
+          type: string
+        status:
+          type: string
